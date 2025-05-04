@@ -1,0 +1,88 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* White background */
+    --foreground: 210 20% 10%; /* Dark text for readability */
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 20% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 20% 10%;
+
+    --primary: 142 84% 28%; /* Blinkit green */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 15% 95%; /* Light gray for secondary elements */
+    --secondary-foreground: 142 84% 28%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 32 100% 60%; /* Blinkit orange */
+    --accent-foreground: 210 20% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142 84% 28%; /* Blinkit green for focus rings */
+
+    --radius: 0.5rem;
+  }
+
+  body {
+    @apply bg-vs-green text-foreground;
+  }
+}
+
+@layer components {
+  .vs-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .nav-link {
+    @apply font-medium text-gray-700 hover:text-vs-yellow transition-colors;
+  }
+  
+  .nav-link-active {
+    @apply font-medium text-vs-yellow;
+  }
+  
+  .vs-button {
+    @apply bg-vs-yellow hover:bg-opacity-90 text-white font-semibold py-3 px-6 rounded-md transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-md;
+  }
+  
+  .vs-card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg;
+  }
+  
+  .vs-whatsapp-banner {
+    @apply bg-gradient-banner text-white;
+  }
+
+  .cart-item {
+    @apply py-4 flex flex-col sm:flex-row sm:items-center border-b border-gray-200;
+  }
+
+  .cart-item-image {
+    @apply flex-shrink-0 w-20 h-20 bg-gray-100 rounded overflow-hidden mr-4 mb-4 sm:mb-0;
+  }
+
+  .cart-item-info {
+    @apply flex-grow mb-4 sm:mb-0;
+  }
+
+  .cart-quantity-controls {
+    @apply flex items-center border rounded-md bg-white;
+  }
+
+  .cart-quantity-button {
+    @apply px-3 py-1 text-gray-600 hover:bg-gray-100;
+  }
+}
