@@ -7,46 +7,74 @@ import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from "@/components/ui/label";
 import { useAuth } from '@/App';
+import { LogIn } from 'lucide-react';
 
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, login, loading } = useAuth();
 
   // Redirect if already authenticated
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !loading) {
       navigate('/admin');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, loading]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Simulate API call delay
-    setTimeout(() => {
-      // In a real app, you would validate credentials against a backend
-      // This is just for demo purposes
-      if (email === 'admin@example.com' && password === 'password') {
-        login();
-        toast({
-          title: 'Login successful',
-          description: 'Welcome back to the admin dashboard',
-        });
-        navigate('/admin');
-      } else {
-        toast({
-          title: 'Login failed',
-          description: 'Invalid email or password',
-          variant: 'destructive',
-        });
-      }
+    setErrorMessage('');
+
+    // Set a timeout to prevent the login from hanging
+    const timeoutId = setTimeout(() => {
+      console.log('Login request timed out');
       setIsLoading(false);
-    }, 1000);
+      setErrorMessage('Login request timed out. Please try again.');
+
+      toast({
+        title: 'Login timed out',
+        description: 'The login request took too long. Please try again.',
+        variant: 'destructive',
+      });
+    }, 10000); // 10 second timeout
+
+    try {
+      await login(email, password);
+
+      // Clear the timeout since we got a response
+      clearTimeout(timeoutId);
+
+      toast({
+        title: 'Login successful',
+        description: 'Welcome back to the admin dashboard',
+      });
+      navigate('/admin');
+    } catch (error: any) {
+      // Clear the timeout since we got a response (an error)
+      clearTimeout(timeoutId);
+
+      console.error('Login error:', error);
+
+      // Handle different error types
+      if (error.message === 'Invalid login credentials') {
+        setErrorMessage('Invalid email or password');
+      } else {
+        setErrorMessage(error.message || 'An error occurred during login');
+      }
+
+      toast({
+        title: 'Login failed',
+        description: errorMessage || 'Invalid email or password',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -91,9 +119,12 @@ const AdminLogin: React.FC = () => {
             </CardFooter>
           </form>
         </Card>
-        
+
         <div className="mt-4 text-center text-sm text-gray-500">
-          <p>Demo credentials: admin@example.com / password</p>
+          <p>Use your Supabase admin credentials to log in</p>
+          {errorMessage && (
+            <p className="mt-2 text-red-500">{errorMessage}</p>
+          )}
         </div>
       </div>
     </div>

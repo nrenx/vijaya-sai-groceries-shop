@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/App';
-import { 
-  LayoutDashboard, 
-  Package, 
-  ShoppingCart, 
-  Users, 
-  MessageSquare, 
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+  MessageSquare,
   Settings,
   LogOut,
   Menu,
@@ -39,9 +39,13 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/admin/login");
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/admin/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   const toggleSidebar = () => {
@@ -66,9 +70,9 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     <div className="min-h-screen bg-gray-50 flex">
       {/* Mobile sidebar toggle */}
       <div className="fixed top-4 left-4 z-30">
-        <Button 
-          variant="outline" 
-          size="icon" 
+        <Button
+          variant="outline"
+          size="icon"
           onClick={toggleSidebar}
           className="bg-white shadow-md"
           aria-label="Toggle sidebar"
@@ -76,9 +80,9 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </Button>
       </div>
-      
+
       {/* Sidebar */}
-      <aside 
+      <aside
         className={cn(
           "bg-white shadow-md w-64 fixed inset-y-0 left-0 z-20 flex flex-col transition-transform duration-300 ease-in-out",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -90,7 +94,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
             <span className="text-xl font-bold text-primary">Vijaya Sai Admin</span>
           </Link>
         </div>
-        
+
         {/* Navigation */}
         <nav className="p-4 flex-grow overflow-y-auto">
           <ul className="space-y-1">
@@ -113,11 +117,11 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
             ))}
           </ul>
         </nav>
-        
+
         {/* Logout */}
         <div className="p-4 border-t">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             className="w-full text-red-500 hover:text-red-600 hover:bg-red-50 flex items-center justify-start"
             onClick={handleLogout}
           >
@@ -126,19 +130,19 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           </Button>
         </div>
       </aside>
-      
+
       {/* Overlay for mobile */}
       {isMobile && sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/30 z-10"
           onClick={() => setSidebarOpen(false)}
         />
       )}
-      
+
       {/* Main content */}
-      <main 
+      <main
         className={cn(
-          "flex-1 transition-all duration-300 ease-in-out", 
+          "flex-1 transition-all duration-300 ease-in-out",
           isMobile ? "p-5 pt-20" : "p-5 lg:p-8",
           sidebarOpen ? "lg:ml-64" : "lg:ml-0"
         )}
